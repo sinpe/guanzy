@@ -1,0 +1,49 @@
+{
+    "name": "long/guanzy",
+    "description": "Guanzy Framwork, It is a simple PHP web framwork with ADR and PSR.",
+    "keywords": [
+        "slim",
+        "framework",
+        "sinpe",
+        "router",
+        "PSR",
+        "middleware",
+        "ADR",
+        "Guanzy",
+        "fast-route"
+    ],
+    "homepage": "https://github.com/sinpe/guanzy",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sinpe",
+            "email": "18222544@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "psr/http-message": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/log": "^1.0",
+        "nikic/fast-route": "^1.0",
+        "long/container": "^1.0"
+    },
+    "suggest": {
+        "long/config": "Config implemention",
+        "long/event": "Event dispatcher"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.3"
+    },
+    "provide": {
+        "psr/http-message-implementation": "1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sinpe\\Framework\\": "src/classes"
+        }
+    }
+}
