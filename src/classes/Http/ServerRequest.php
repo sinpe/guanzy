@@ -13,7 +13,6 @@ namespace Sinpe\Framework\Http;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-
 use Sinpe\Framework\ArrayObject;
 
 /**

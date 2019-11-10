@@ -27,7 +27,7 @@ abstract class RequestInspector
      *
      * @var array
      */
-    private $routeParams = [];
+    private $routeArguments = [];
 
     /**
      * 子模式
@@ -152,7 +152,7 @@ abstract class RequestInspector
      * @param ServerRequestInterface $request
      * @return ArrayObject
      */
-    final public function handle(ServerRequestInterface $request, ArrayObject $routeParams = null): ArrayObject
+    final public function handle(ServerRequestInterface $request): ArrayObject
     {
         // 指定特定模式做检查
         if ($this->mode) {
@@ -172,13 +172,11 @@ abstract class RequestInspector
         if ($mode) {
             $mode->setStrict($this->strict);
             $mode->setFields($this->fields, $this->defaultValues);
-            return $mode->handle($request, $routeParams);
+            return $mode->handle($request);
         }
 
         // 绑定route参数
-        if ($routeParams) {
-            $this->routeParams = $routeParams;
-        }
+        $this->routeArguments = $request->getRouteArguments();
 
         $params = $this->getFieldParams($request);
 
@@ -281,8 +279,8 @@ abstract class RequestInspector
      * @param string $key
      * @return mixed
      */
-    protected function getRouteParams(string $key)
+    protected function getRouteArguments(string $key)
     {
-        return $this->routeParams[$key] ?? null;
+        return $this->routeArguments[$key] ?? null;
     }
 }
