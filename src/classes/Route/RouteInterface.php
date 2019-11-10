@@ -79,8 +79,5 @@ interface RouteInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function run(
-        ServerRequestInterface $request,
-        array $arguments = []
-    );
+    public function run(ServerRequestInterface $request);
 }
