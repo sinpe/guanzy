@@ -76,6 +76,13 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $bodyParsed = false;
 
     /**
+     * The route arguments.
+     *
+     * @var array
+     */
+    protected $routeArguments = [];
+
+    /**
      * Create new HTTP request.
      *
      * Adds a host header when none was provided and a host is defined in uri.
@@ -113,7 +120,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
         if (isset($serverParams['SERVER_PROTOCOL'])) {
             $this->protocolVersion = str_replace('HTTP/', '', $serverParams['SERVER_PROTOCOL']);
-        }        
+        }
 
         $this->registerMediaTypeParser('application/json', function ($input) {
             $result = json_decode($input, true);
@@ -353,9 +360,9 @@ class ServerRequest extends Request implements ServerRequestInterface
         if (!$this->uploadedFiles) {
             //
             $parsed = [];
-            
+
             foreach ($_FILES as $field => $uploadedFile) {
-                
+
                 $parsed[$field] = [];
                 // one
                 if (!is_array($uploadedFile['error'])) {
@@ -431,7 +438,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
             $this->uploadedFiles = $parsed;
         }
-            
+
         return $this->uploadedFiles ?? [];
     }
 
@@ -942,6 +949,36 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
+     * setRouteArguments
+     *
+     * @param array $routeArguments
+     * @return void
+     */
+    public function setRouteArguments(array $routeArguments)
+    {
+        $this->routeArguments = $routeArguments ?? [];
+    }
+
+    /**
+     * getRouteArguments
+     *
+     * @param string $item
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getRouteArguments(string $item = null, $default = null)
+    {
+        if (!empty($item)) {
+            if (isset($this->routeArguments[$item])) {
+                return $this->routeArguments[$item];
+            } else {
+                return $default;
+            }
+        }
+        return $this->routeArguments;
+    }
+
+    /**
      * This method is applied to the cloned object
      * after PHP performs an initial shallow-copy. This
      * method completes a deep-copy by creating new objects
@@ -953,5 +990,4 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->attributes = clone $this->attributes;
         $this->body = clone $this->body;
     }
-
 }

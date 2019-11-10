@@ -81,9 +81,7 @@ class RequestHandler implements RequestHandlerInterface, MiddlewareAwareInterfac
 
             $route = $routeInfo[1];
 
-            // $route->prepare($request, $routeArguments);
-            // $request = $request->withAttribute('route', $route);
-
+            $request->setRouteArguments($routeArguments);
             // NOTE froze the request object, After this time, you can not change request!
             $this->container->set(ServerRequestInterface::class, $request);
 
