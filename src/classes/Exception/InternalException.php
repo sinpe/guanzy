@@ -45,12 +45,16 @@ class InternalException extends \RuntimeException
         $context = []
     ) {
 
-        if (!is_int($code) && !is_null($code)) {
+        if (is_null($code)) {
+            $code = $this->errorCode;
+        }
+
+        if (!is_int($code)) {
             $context = $previous;
             $previous = $code;
             $code = $this->errorCode;
         }
-
+        
         if (!$previous instanceof \Exception && !is_null($previous)) {
             $context = $previous;
             $previous = null;

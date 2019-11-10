@@ -20,18 +20,18 @@ use Psr\Http\Server\RequestHandlerInterface;
  * 
  * @author sinpe <18222544@qq.com>
  */
-class Cors implements MiddlewareInterface
+class CORS implements MiddlewareInterface
 {
     /**
      * @var array
      */
     protected $options = [
         'origin' => '*',
-        'allowMethods' => 'GET,HEAD,PUT,POST,DELETE',
-        // 'maxAge' =>
-        // 'exposeHeaders' =>
-        // 'allowHeaders' =>
-        // 'allowCredentials' =>
+        'allow_methods' => 'GET,HEAD,PUT,POST,DELETE',
+        // 'max_age' =>
+        // 'expose_headers' =>
+        // 'allow_headers' =>
+        // 'allow_credentials' =>
     ];
 
     /**
@@ -135,8 +135,8 @@ class Cors implements MiddlewareInterface
     protected function setExposeHeaders(ResponseInterface $response): ResponseInterface
     {
         // 
-        if (isset($this->options['exposeHeaders'])) {
-            $exposeHeaders = $this->options['exposeHeaders'];
+        if (isset($this->options['expose_headers'])) {
+            $exposeHeaders = $this->options['expose_headers'];
             if (is_array($exposeHeaders)) {
                 $exposeHeaders = implode(", ", $exposeHeaders);
             }
@@ -154,8 +154,8 @@ class Cors implements MiddlewareInterface
      */
     protected function setMaxAge(ResponseInterface $response): ResponseInterface
     {
-        if (isset($this->options['maxAge'])) {
-            $response = $response->withHeader('Access-Control-Max-Age', $this->options['maxAge']);
+        if (isset($this->options['max_age'])) {
+            $response = $response->withHeader('Access-Control-Max-Age', $this->options['max_age']);
         }
         return $response;
     }
@@ -167,7 +167,7 @@ class Cors implements MiddlewareInterface
      */
     protected function setAllowCredentials(ResponseInterface $response): ResponseInterface
     {
-        if (isset($this->options['allowCredentials']) && $this->options['allowCredentials'] === true) {
+        if (isset($this->options['allow_credentials']) && $this->options['allow_credentials'] === true) {
             $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
         }
 
@@ -182,8 +182,8 @@ class Cors implements MiddlewareInterface
     protected function setAllowMethods(ResponseInterface $response): ResponseInterface
     {
 
-        if (isset($this->options['allowMethods'])) {
-            $allowMethods = $this->options['allowMethods'];
+        if (isset($this->options['allow_methods'])) {
+            $allowMethods = $this->options['allow_methods'];
             if (is_array($allowMethods)) {
                 $allowMethods = implode(', ', $allowMethods);
             }
@@ -203,8 +203,8 @@ class Cors implements MiddlewareInterface
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
-        if (isset($this->options['allowHeaders'])) {
-            $allowHeaders = $this->options['allowHeaders'];
+        if (isset($this->options['allow_headers'])) {
+            $allowHeaders = $this->options['allow_headers'];
             if (is_array($allowHeaders)) {
                 $allowHeaders = implode(", ", $allowHeaders);
             }

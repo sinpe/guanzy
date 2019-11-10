@@ -107,7 +107,6 @@ trait MiddlewareAwareTrait
 
         if ($this->hasMiddleware()) {
             $middleware = $this->shift();
-            //
             if ($middleware instanceof WhenMiddleware) {
                 // assert
                 if ($middleware->assert($request)) {
@@ -115,7 +114,6 @@ trait MiddlewareAwareTrait
                 } else {
                     // waiting
                     $this->whenStacks[] = $middleware;
-                    
                     return $this->handle($request);
                 }
             } else {
