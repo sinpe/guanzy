@@ -85,7 +85,7 @@ class RequestHandler implements RequestHandlerInterface, MiddlewareAwareInterfac
             // NOTE froze the request object, After this time, you can not change request!
             $this->container->set(ServerRequestInterface::class, $request);
 
-            return $route->run($request, $routeArguments);
+            return $route->run($request);
             //
         } elseif ($routeInfo[0] === Dispatcher::METHOD_NOT_ALLOWED) {
             throw new MethodNotAllowedException($routeInfo[1]);

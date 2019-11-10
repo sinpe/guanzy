@@ -183,11 +183,10 @@ class Route extends Routable implements RouteInterface
      * @return ResponseInterface
      */
     public function run(
-        ServerRequestInterface $request,
-        array $routeArguments = []
+        ServerRequestInterface $request
     ): ResponseInterface {
 
-        $handler = new RouteHandler($this->router, $this->callable, $routeArguments);
+        $handler = new RouteHandler($this->router, $this->callable);
 
         $handler->addMany(array_reverse($this->middlewares));
         // 绑定group的中间件

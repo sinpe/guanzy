@@ -27,13 +27,6 @@ class RouteHandler implements RequestHandlerInterface, MiddlewareAwareInterface
     private $router;
 
     /**
-     * Route parameters
-     *
-     * @var array
-     */
-    protected $routeArguments = [];
-
-    /**
      * @var Callable
      */
     private $callable;
@@ -45,12 +38,10 @@ class RouteHandler implements RequestHandlerInterface, MiddlewareAwareInterface
      */
     public function __construct(
         RouterInterface $router,
-        $callable,
-        array $routeArguments = []
+        $callable
     ) {
         $this->router = $router;
         $this->callable = $callable;
-        $this->routeArguments = $routeArguments;
     }
 
     /**
@@ -70,8 +61,7 @@ class RouteHandler implements RequestHandlerInterface, MiddlewareAwareInterface
 
         $response = $strategy->process(
             $this->router->resolve($this->callable),
-            $request,
-            $this->routeArguments ?? []
+            $request
         );
 
         if (!$response instanceof ResponseInterface) {

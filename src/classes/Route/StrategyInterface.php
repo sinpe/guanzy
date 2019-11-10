@@ -23,13 +23,11 @@ interface StrategyInterface
      *
      * @param callable               $callable The callable to invoke using the strategy.
      * @param ServerRequestInterface $request The request object.
-     * @param array                  $routeArguments The route's placholder arguments
      *
      * @return ResponseInterface|string The response from the callable.
      */
     public function process(
         callable $callable,
-        ServerRequestInterface $request,
-        array $routeArguments
+        ServerRequestInterface $request
     ):ResponseInterface;
 }

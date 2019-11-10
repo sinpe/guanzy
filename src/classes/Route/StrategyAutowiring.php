@@ -27,23 +27,14 @@ class StrategyAutowiring implements StrategyInterface
     private $container;
 
     /**
-     * Route params handler
-     *
-     * @var callable
-     */
-    private $argsHandler;
-
-    /**
      * __construct
      *
      * @param ContainerInterface $container The di container
      */
     public function __construct(
-        ContainerInterface $container,
-        callable $argsHandler = null
+        ContainerInterface $container
     ) {
         $this->container = $container;
-        $this->argsHandler = $argsHandler;
     }
 
     /**
@@ -52,24 +43,15 @@ class StrategyAutowiring implements StrategyInterface
      *
      * @param array|callable         $callable
      * @param ServerRequestInterface $request
-     * @param array                  $routeArguments
      *
      * @return mixed
      */
     public function process(
         callable $callable,
-        ServerRequestInterface $request,
-        array $routeArguments = []
+        ServerRequestInterface $request
     ):ResponseInterface {
-		// 三个固定名字的参数
+		// 一个固定名字的参数
         $args['request'] = $request;
-        // 
-        if (is_callable($this->argsHandler)) { // custom from your apply
-            $args['args'] = call_user_func($this->argsHandler, $routeArguments);
-        } else {
-            $args['args'] = $routeArguments;
-        }
-        
         return $this->container->call($callable, $args);
     }
 }

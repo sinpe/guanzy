@@ -40,12 +40,7 @@ class Container extends \Sinpe\Container\Container
                 $router->setBasePath(Environment::getBasePath());
 
                 $router->setResolver(new CallableResolver($container));
-                $router->setActionStrategy(new Route\StrategyAutowiring(
-                    $container,
-                    function ($args) {
-                        return new ArrayObject($args);
-                    }
-                ));
+                $router->setActionStrategy(new Route\StrategyAutowiring($container));
 
                 $router->setUriGetter(function ($request) {
                     return Environment::getDomain() . '/' . trim($request->getUri()->getPath(), '/');
