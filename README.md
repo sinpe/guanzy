@@ -34,6 +34,15 @@ $app->run();
 
 ## 其他相关
 
-[Slim](https://github.com/slimphp/Slim/)：本框架的来源，它是一个微型PHP框架。
+[Slim](https://github.com/slimphp/Slim/) 本框架的来源，它是一个微型PHP框架。
 
-[FastRoute](https://github.com/nikic/FastRoute): 本框架路由的解析器。
+[FastRoute](https://github.com/nikic/FastRoute) 本框架路由的解析器。
+
+[Psr](https://www.php-fig.org/) PSR。
+
+
+## 推荐包
+
+[Flysystem](https://flysystem.thephpleague.com/docs/) 文件系统
+
+[TWIG](https://github.com/twigphp/Twig) 模板解析
