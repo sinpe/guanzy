@@ -26,7 +26,7 @@ class InternalErrorHtmlResolver extends ResponderResolver
      */
     public function resolve(ArrayObject $output): string
     {
-        $title = 'Error';
+        $title = 'Internal Server Error';
 
         if (APP_DEBUG) {
             $html = '<p>The application could not run because of the following error:</p>';

@@ -22,7 +22,7 @@ class InternalErrorLogger
      */
     public static function write(\Throwable $error)
     {
-        $message = 'Error:' . PHP_EOL;
+        $message = 'Internal Server Error:' . PHP_EOL;
 
         $message .= self::ex2text($error);
 

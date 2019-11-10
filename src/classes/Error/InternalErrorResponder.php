@@ -71,7 +71,7 @@ class InternalErrorResponder extends Responder
 
         $fmt = [
             'code' => min($error->getCode(), -1),
-            'message' => 'Error'
+            'message' => 'Internal Server Error'
         ];
 
         // 
