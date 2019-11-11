@@ -11,7 +11,6 @@
 namespace Sinpe\Framework\Http;
 
 use FastRoute\Dispatcher;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,21 +34,6 @@ class RequestHandler implements RequestHandlerInterface, MiddlewareAwareInterfac
     use MiddlewareAwareTrait;
 
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * __construct
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
-    /**
      * Dispatch route callable against current ServerRequest and Response objects
      *
      * This method invokes the route object's callable. If middleware is
@@ -62,8 +46,8 @@ class RequestHandler implements RequestHandlerInterface, MiddlewareAwareInterfac
      */
     private function _run(ServerRequestInterface $request): ResponseInterface
     {
-        $router = $this->container->get(RouterInterface::class);
-        
+        $router = container(RouterInterface::class);
+
         $routeInfo = $router->dispatch($request);
 
         if ($routeInfo[0] === Dispatcher::FOUND) {
@@ -82,8 +66,6 @@ class RequestHandler implements RequestHandlerInterface, MiddlewareAwareInterfac
             $route = $routeInfo[1];
 
             $request->setRouteArguments($routeArguments);
-            // NOTE froze the request object, After this time, you can not change request!
-            $this->container->set(ServerRequestInterface::class, $request);
 
             return $route->run($request);
             //

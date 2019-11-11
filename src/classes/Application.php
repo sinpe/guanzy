@@ -60,6 +60,7 @@ class Application
         if (!$container instanceof ContainerInterface) {
             throw new \Exception(i18n('container return Must be %s', ContainerInterface::class));
         }
+        $container->set(ContainerInterface::class, $container);
 
         // config instance
         $config = $this->genConfig();
@@ -270,7 +271,7 @@ class Application
             ob_start();
         }
         // Traverse middleware stack
-        $requestHandler = new Http\RequestHandler(container());
+        $requestHandler = new Http\RequestHandler;
         //
         $requestHandler->addMany(array_reverse($this->middlewares));
         // if exception thrown, request changed should be loss.

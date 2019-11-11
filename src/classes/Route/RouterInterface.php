@@ -119,5 +119,5 @@ interface RouterInterface
      *
      * @return void
      */
-    public function setActionStrategy($strategy);
+    public function setActionStrategy(callable $strategy);
 }

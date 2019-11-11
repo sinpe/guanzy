@@ -10,6 +10,7 @@
 
 namespace Sinpe\Framework\Route;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -57,12 +58,14 @@ class RouteHandler implements RequestHandlerInterface, MiddlewareAwareInterface
      */
     protected function run(ServerRequestInterface $request)
     {
-        $strategy = $this->router->getActionStrategy();
+        $container = container(ContainerInterface::class);
+        // NOTE froze the request object, After this time, you can not change request!
+        $container->set(ServerRequestInterface::class, $request);
 
-        $response = $strategy->process(
-            $this->router->resolve($this->callable),
-            $request
-        );
+        $response = call_user_func(
+            $this->router->getActionStrategy(),
+            $this->router->resolve($this->callable)
+        ); 
 
         if (!$response instanceof ResponseInterface) {
             throw new \Exception(sprintf('route callback MUST return a %s.', ResponseInterface::class));

@@ -438,9 +438,9 @@ class Router implements RouterInterface
     /**
      * Action strategy
      *
-     * @return void
+     * @return callable
      */
-    public function getActionStrategy()
+    public function getActionStrategy(): callable
     {
         if ($this->actionStrategy) {
             return $this->actionStrategy;
@@ -453,7 +453,7 @@ class Router implements RouterInterface
      *
      * @return static
      */
-    public function setActionStrategy($strategy)
+    public function setActionStrategy(callable $strategy)
     {
         $this->actionStrategy = $strategy;
         return $this;
