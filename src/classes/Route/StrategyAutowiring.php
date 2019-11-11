@@ -12,7 +12,6 @@ namespace Sinpe\Framework\Route;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * 基于命名参数和自动注入的路由调度方式
@@ -42,16 +41,12 @@ class StrategyAutowiring implements StrategyInterface
      * as individual arguments.
      *
      * @param array|callable         $callable
-     * @param ServerRequestInterface $request
      *
      * @return mixed
      */
     public function process(
-        callable $callable,
-        ServerRequestInterface $request
+        callable $callable
     ):ResponseInterface {
-		// 一个固定名字的参数
-        $args['request'] = $request;
-        return $this->container->call($callable, $args);
+        return $this->container->call($callable);
     }
 }
