@@ -22,12 +22,8 @@ interface StrategyInterface
      * Invoke a route callable.
      *
      * @param callable               $callable The callable to invoke using the strategy.
-     * @param ServerRequestInterface $request The request object.
      *
      * @return ResponseInterface|string The response from the callable.
      */
-    public function process(
-        callable $callable,
-        ServerRequestInterface $request
-    ):ResponseInterface;
+    public function process(callable $callable): ResponseInterface;
 }
