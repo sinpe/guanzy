@@ -192,7 +192,7 @@ class Response extends Message implements ResponseInterface
         }
 
         $clone = clone $this;
-        $clone->status = $code;
+        $clone->statusCode = $code;
         if ($reasonPhrase === '' && isset(static::$messages[$code])) {
             $reasonPhrase = static::$messages[$code];
         }

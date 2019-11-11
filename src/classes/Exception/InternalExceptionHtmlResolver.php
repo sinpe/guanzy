@@ -10,7 +10,6 @@
 
 namespace Sinpe\Framework\Exception;
 
-use Sinpe\Framework\ArrayObject;
 use Sinpe\Framework\Error\InternalErrorHtmlResolver;
 
 /**
