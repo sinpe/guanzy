@@ -178,9 +178,9 @@ class EnvironmentImpl extends ArrayObject
      *
      * [scheme:][//authority][path][?query][#fragment]
      * 
-     * @return string
+     * @return Http\Uri
      */
-    public function getUri(): string
+    public function getUri(): Http\Uri
     {
         if (!$this->uri) {
             // Scheme

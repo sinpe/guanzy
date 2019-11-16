@@ -40,7 +40,7 @@ class Container extends \Sinpe\Container\Container
                 $router->setBasePath(Environment::getBasePath());
 
                 $router->setResolver(new CallableResolver($container));
-                $router->setActionStrategy(function($callable) use ($container) {
+                $router->setInvoker(function($callable) use ($container) {
                     return $container->call($callable);
                 });
 

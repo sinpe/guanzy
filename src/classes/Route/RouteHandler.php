@@ -63,7 +63,7 @@ class RouteHandler implements RequestHandlerInterface, MiddlewareAwareInterface
         $container->set(ServerRequestInterface::class, $request);
 
         $response = call_user_func(
-            $this->router->getActionStrategy(),
+            $this->router->getInvoker(),
             $this->router->resolve($this->callable)
         ); 
 

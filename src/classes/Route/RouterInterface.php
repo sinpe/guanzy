@@ -108,16 +108,16 @@ interface RouterInterface
     public function setResolver(CallableResolverInterface $resolver);
 
     /**
-     * Undocumented function
+     * getInvoker
      *
      * @return void
      */
-    public function getActionStrategy();
+    public function getInvoker();
 
     /**
-     * Undocumented function
+     * setInvoker
      *
      * @return void
      */
-    public function setActionStrategy(callable $strategy);
+    public function setInvoker(callable $strategy);
 }
