@@ -55,8 +55,12 @@ class InternalErrorResponder extends Responder
      * @param \Throwable $data
      * @return ResponseInterface
      */
-    public function handle(\Throwable $error): ResponseInterface
+    public function handle($error): ResponseInterface
     {
+        if (!$error instanceof \Throwable) {
+            throw new \Exception(i18n('a Throwable needed'));
+        }
+        
         return parent::handle(['thrown' => $error]);
     }
 

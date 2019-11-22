@@ -192,7 +192,7 @@ class Route extends Routable implements RouteInterface
         // 绑定group的中间件
         $groupMiddlewares = [];
 
-        foreach ($this->getGroups() as $group) {
+        foreach ($this->getGroups() ?? [] as $group) {
             $groupMiddlewares = array_merge($groupMiddlewares, $group->getMiddlewareStack());
         }
 

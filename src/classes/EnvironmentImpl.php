@@ -41,7 +41,14 @@ class EnvironmentImpl extends ArrayObject
     /**
      * @var string
      */
-    private $basePath;
+    private $innerBasePath;
+
+    /**
+     * When you using proxy and has a prefix path
+     * 
+     * @var string
+     */
+    private $proxyBasePath = '';
 
     /**
      * Sources for host, You can override by your subclass
@@ -213,28 +220,39 @@ class EnvironmentImpl extends ArrayObject
     }
 
     /**
-     * Get basePath from environment.
+     * Get innerBasePath from environment.
      *
      * @return string
      */
     public function getBasePath(): ?string
     {
-        if (!$this->basePath) {
+        if (!$this->innerBasePath) {
 
             $requestScriptName = $this->get('SCRIPT_NAME');
             $requestScriptDir = str_replace('\\', '/', dirname($requestScriptName));
             $requestUri = $this->get('REQUEST_URI');
 
-            $this->basePath = '';
+            $this->innerBasePath = '';
 
             if (stripos($requestUri, $requestScriptName) === 0) {
-                $this->basePath = $requestScriptName;
+                $this->innerBasePath = $requestScriptName;
             } elseif ($requestScriptDir !== '/' && stripos($requestUri, $requestScriptDir) === 0) {
-                $this->basePath = $requestScriptDir;
+                $this->innerBasePath = $requestScriptDir;
             }
         }
 
-        return $this->basePath;
+        return $this->innerBasePath;
+    }
+
+    /**
+     * Set proxy base path
+     *
+     * @param string $basePath
+     * @return void
+     */
+    public function setProxyBasePath(string $basePath = '')
+    {
+        return $this->proxyBasePath = $basePath;
     }
 
     /**
@@ -244,7 +262,8 @@ class EnvironmentImpl extends ArrayObject
      */
     public function createFullUrl($path, $scheme = true): string
     {
-        return ($scheme ? $this->getScheme() . '://' : '//') . $this->getAuthority() . $path;
+        return ($scheme ? $this->getScheme() . '://' : '//') . $this->getAuthority()
+            . ($this->proxyBasePath ? '/' . trim($this->proxyBasePath, '/\\') : '') . '/' . trim($path, '/\\');
     }
 
     /**
