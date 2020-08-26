@@ -92,6 +92,18 @@ class Action
     }
 
     /**
+     * Redirect
+     *
+     * @param string $url
+     * @param integer $status
+     * @return ResponseInterface
+     */
+    protected function redirect(string $url, $status = 302): ResponseInterface
+    {
+        return $this->getResponder()->handle()->withHeader('Location', $url)->withStatus($status);
+    }
+
+    /**
      * Success with context (differ from a page)
      *
      * @param string $message
