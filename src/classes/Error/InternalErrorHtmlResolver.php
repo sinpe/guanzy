@@ -32,9 +32,12 @@ class InternalErrorHtmlResolver extends ResponderResolver
             $html = '<p>The application could not run because of the following error:</p>';
             $html .= '<h2>Details</h2>';
             $html .= $this->renderHtmlError($output);
-            while ($output = $output->previous) {
-                $html .= '<h2>Previous error</h2>';
-                $html .= $this->renderHtmlError($output);
+
+            $previous = $output->previous;
+            
+            foreach($previous as $i => $item)  {
+                $html .= "<h2>Previous error #$i</h2>";
+                $html .= $this->renderHtmlError(new ArrayObject($item));
             }
         } else {
             $html = '<p>A website error has occurred. Sorry for the temporary inconvenience.</p>';
