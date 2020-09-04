@@ -9,15 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Sinpe\Framework\Middleware;
+namespace Sinpe\Framework\Middleware\Session;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Session middleware
  */
-class Session
+class SessionMiddleware
 {
     /**
      * @var array
@@ -69,6 +70,7 @@ class Session
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $request = $this->startSession($request);
+
         return $handler->handle($request);
     }
 
@@ -87,6 +89,7 @@ class Session
         }
 
         $options = $this->options;
+        
         $name = $options['name'];
 
         session_set_cookie_params(

@@ -48,7 +48,7 @@ if (!function_exists('container')) {
      * You can override me directly.
      *
      * @param  string  $value
-     * @return string
+     * @return object|boolean
      */
     function container(string $name = null, bool $check = false)
     {

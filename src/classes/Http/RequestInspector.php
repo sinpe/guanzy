@@ -18,6 +18,8 @@ use Sinpe\Framework\ArrayObject;
  * 
  * 检查器的使命是根据Request的输入，返回出可以逻辑层可以直接使用的数据对象
  * 
+ * 实现表单字段到表字段的转换过程
+ * 
  * @author sinpe <18222544@qq.com>
  */
 abstract class RequestInspector
@@ -67,14 +69,16 @@ abstract class RequestInspector
     ];
 
     /**
+     * 检查环节最后的回调
+     * 
+     * 比如可做字段间的关联检查
+     * 
      * @var callable[]
      */
     private $finalizes = [];
 
     /**
-     * 关联检查
-     *
-     * @return void
+     * @return static
      */
     final public function finalize(callable $fn)
     {
@@ -274,13 +278,25 @@ abstract class RequestInspector
     }
 
     /**
-     * Get route parameter value
+     * Get route parameter values
+     * 
+     * @return array
+     */
+    protected function getRouteArguments(): array
+    {
+        return $this->routeArguments ?? [];
+    }
+
+    /**
+     * Get one route parameter value
      * 
      * @param string $key
      * @return mixed
      */
-    protected function getRouteArguments(string $key)
+    protected function getRouteArgument(string $key)
     {
-        return $this->routeArguments[$key] ?? null;
+        $routeArguments = $this->getRouteArguments();
+
+        return $routeArguments[$key] ?? null;
     }
 }
