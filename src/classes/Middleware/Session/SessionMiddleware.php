@@ -14,11 +14,12 @@ namespace Sinpe\Framework\Middleware\Session;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 /**
  * Session middleware
  */
-class SessionMiddleware
+class SessionMiddleware implements MiddlewareInterface
 {
     /**
      * @var array
@@ -67,8 +68,10 @@ class SessionMiddleware
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         $request = $this->startSession($request);
 
         return $handler->handle($request);
@@ -89,7 +92,7 @@ class SessionMiddleware
         }
 
         $options = $this->options;
-        
+
         $name = $options['name'];
 
         session_set_cookie_params(

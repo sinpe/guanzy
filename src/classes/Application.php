@@ -340,4 +340,13 @@ class Application
 
         return $response;
     }
+
+    /**
+	 * 延迟执行
+	 */
+	public function __destruct()
+	{
+		// TODO
+    }
+    
 }

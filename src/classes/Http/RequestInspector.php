@@ -95,6 +95,7 @@ abstract class RequestInspector
     final public function setMode($mode)
     {
         $this->mode = $mode;
+
         return $this;
     }
 
@@ -160,11 +161,15 @@ abstract class RequestInspector
     {
         // 指定特定模式做检查
         if ($this->mode) {
+            // 
             if (is_string($this->mode)) {
+                // 
                 $studlyMode = studly($this->mode);
+
                 $reflectionClass = new \ReflectionClass(static::class);
                 // 和检查器同存放位置
                 $modeClass = $reflectionClass->getNamespaceName() . "\\{$studlyMode}Mode";
+
                 if (class_exists($modeClass)) {
                     $mode = new $modeClass($this);
                 }

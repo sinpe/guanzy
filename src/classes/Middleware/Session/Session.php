@@ -30,9 +30,11 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function get($key, $default = null)
     {
-        return $this->exists($key)
-            ? $_SESSION[$key]
-            : $default;
+        if ($this->has($key)) {
+            return unserialize($_SESSION[$key]);
+        } else {
+            return $default;
+        }
     }
 
     /**
@@ -45,7 +47,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function set($key, $value)
     {
-        $_SESSION[$key] = $value;
+        $_SESSION[$key] = serialize($value);
 
         return $this;
     }
@@ -76,7 +78,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function delete($key)
     {
-        if ($this->exists($key)) {
+        if ($this->has($key)) {
             unset($_SESSION[$key]);
         }
 
@@ -102,7 +104,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return bool
      */
-    public function exists($key)
+    public function has($key)
     {
         return array_key_exists($key, $_SESSION);
     }
@@ -182,7 +184,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Magic method for exists.
+     * Magic method for has.
      *
      * @param string $key
      *
@@ -190,7 +192,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __isset($key)
     {
-        return $this->exists($key);
+        return $this->has($key);
     }
 
     /**
@@ -214,7 +216,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Whether an array offset exists.
+     * Whether an array offset has.
      *
      * @param mixed $offset
      *
@@ -222,7 +224,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return $this->exists($offset);
+        return $this->has($offset);
     }
 
     /**
