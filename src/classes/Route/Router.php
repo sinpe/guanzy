@@ -27,7 +27,6 @@ class Router implements RouterInterface
 {
     private $resolver;
     private $actionStrategy;
-    private $uriGetter;
 
     /**
      * @var array
@@ -157,7 +156,22 @@ class Router implements RouterInterface
         }
 
         if ($this->domains) {
-            $route->setDomain($this->domains);
+
+            $domains = explode(',', $this->domains);
+
+            foreach ($domains as $domain) {
+                // 
+                $parts = parse_url($domain);
+
+                $scheme = $parts['scheme'] ?? '';
+                $host = $parts['host'] ?? '';
+                $port = $parts['port'] ?? 80;
+                $user = $parts['user'] ?? '';
+                $password = $parts['pass'] ?? '';
+
+                $route->setHost($host, $port, $scheme)
+                    ->setUserInfo($user, $password);
+            }
         }
 
         $this->routes[] = $route;
@@ -176,11 +190,7 @@ class Router implements RouterInterface
      */
     public function dispatch(ServerRequestInterface $request)
     {
-        if (is_callable($this->uriGetter)) {
-            $uri = call_user_func($this->uriGetter, $request);
-        } else {
-            $uri = '/' . trim($request->getUri()->getPath(), '/');
-        }
+        $uri = '/' . trim($request->getUri()->getPath(), '/');
 
         if (!isset($this->dispatchedCache[$uri])) {
             $this->dispatchedCache[$uri] = $this->createDispatcher()->dispatch($request->getMethod(), $uri);
@@ -199,13 +209,10 @@ class Router implements RouterInterface
         }
 
         $routeDefinitionCallback = function (RouteCollector $r) {
+            // 
             foreach ($this->getRoutes() as $route) {
-                $domain = $route->getDomain();
-                if ($domain) {
-                    $r->addRoute($route->getMethods(), $domain . $this->basePath . $route->getOriginalPattern(), $route);
-                } else {
-                    $r->addRoute($route->getMethods(), $this->basePath . $route->getOriginalPattern(), $route);
-                }
+                // 
+                $r->addRoute($route->getMethods(), $this->basePath . $route->getOriginalPattern(), $route);
             }
         };
 
@@ -401,10 +408,10 @@ class Router implements RouterInterface
         $route = $this->getNamedRoute($name);
         $url = $this->pathFor($name, $data, $queryParams);
 
-        $domain = $route->getDomain();
+        $domain = $route->getSchemeAuthority();
 
         if (!empty($domain)) {
-            $url = '//' . $domain . $url;
+            $url = $domain . $url;
         }
 
         return $url;
@@ -459,14 +466,4 @@ class Router implements RouterInterface
         return $this;
     }
 
-    /**
-     * Set URI getter
-     *
-     * @return static
-     */
-    public function setUriGetter($uriGetter)
-    {
-        $this->uriGetter = $uriGetter;
-        return $this;
-    }
 }

@@ -19,6 +19,16 @@ use Psr\Http\Message\ResponseInterface;
 class Route extends Routable implements RouteInterface
 {
     /**
+     * @var string
+     */
+    protected $user = '';
+
+    /**
+     * @var string
+     */
+    protected $password = '';
+
+    /**
      * @var array
      */
     protected $middlewares = [];
@@ -50,8 +60,19 @@ class Route extends Routable implements RouteInterface
     protected $groups;
 
     /**
+     * scheme
      */
-    protected $domain;
+    protected $scheme;
+
+    /**
+     * host
+     */
+    protected $host;
+
+    /**
+     * port
+     */
+    protected $port;
 
     /**
      * The callable payload
@@ -129,19 +150,55 @@ class Route extends Routable implements RouteInterface
     }
 
     /**
-     * Set domain
+     * Set user and password
      */
-    public function setDomain(string $domain)
+    public function setUserInfo($user, $password)
     {
-        $this->domain = $domain;
+        $this->user = $user;
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
-     * Get domain
+     * 
      */
-    public function getDomain(): ?string
+    protected function getAuthority(): string
     {
-        return $this->domain;
+        $userInfo = $this->user;
+
+        if (!empty($this->password)) {
+            $userInfo .= ':' . $this->password;
+        }
+
+        return ($userInfo !== '' ? $userInfo . '@' : '') .
+            $this->host . (!empty($this->port) && $this->port != 80 && $this->port != 443 ? ':' . $this->port : '');
+    }
+
+    /**
+     * Set host
+     */
+    public function setHost(string $host, int $port = 80, string $scheme = null)
+    {
+        $this->host = $host;
+        $this->port = $port;
+
+        if (!empty($scheme)) {
+            $this->scheme = str_replace('://', '', strtolower($scheme));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get scheme and authority
+     */
+    public function getSchemeAuthority(): ?string
+    {
+        $authority = $this->getAuthority();
+
+        return (!empty($this->scheme) ? $this->scheme . ':' : '')
+            . ($authority !== '' ? '//' . $authority : '');
     }
 
     /**

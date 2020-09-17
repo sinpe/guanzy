@@ -179,11 +179,6 @@ class Application
         
         $route = container(Route\RouterInterface::class)->map($methods, $pattern, $callable);
 
-        $domain = $route->getDomain();
-        if (empty($domain)) {
-            $route->setDomain(Environment::getDomain());
-        }
-
         return $route;
     }
 

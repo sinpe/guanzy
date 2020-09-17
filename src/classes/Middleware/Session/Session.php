@@ -76,7 +76,7 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return $this
      */
-    public function delete($key)
+    public function remove($key)
     {
         if ($this->has($key)) {
             unset($_SESSION[$key]);
@@ -174,13 +174,13 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Magic method for delete.
+     * Magic method for remove.
      *
      * @param string $key
      */
     public function __unset($key)
     {
-        $this->delete($key);
+        $this->remove($key);
     }
 
     /**
@@ -257,6 +257,6 @@ class Session implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetUnset($offset)
     {
-        $this->delete($offset);
+        $this->remove($offset);
     }
 }

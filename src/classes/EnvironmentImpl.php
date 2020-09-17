@@ -41,14 +41,14 @@ class EnvironmentImpl extends ArrayObject
     /**
      * @var string
      */
-    private $innerBasePath;
+    private $scriptPath;
 
     /**
      * When you using proxy and has a prefix path
      * 
      * @var string
      */
-    private $proxyBasePath = '';
+    private $virtualPath = '';
 
     /**
      * Sources for host, You can override by your subclass
@@ -165,7 +165,7 @@ class EnvironmentImpl extends ArrayObject
     {
         $port = $this->getPort();
 
-        return  trim(implode(':', [$this->getHost(), $port !== 80 ? $port : '']), ':');
+        return  trim(implode(':', [$this->getHost(), $port !== 80 && $port !== 443 ? $port : '']), ':');
     }
 
     /**
@@ -220,39 +220,53 @@ class EnvironmentImpl extends ArrayObject
     }
 
     /**
-     * Get innerBasePath from environment.
+     * Get scriptPath from environment.
      *
      * @return string
      */
     public function getBasePath(): ?string
     {
-        if (!$this->innerBasePath) {
+        if (!$this->scriptPath) {
 
-            $requestScriptName = $this->get('SCRIPT_NAME');
-            $requestScriptDir = str_replace('\\', '/', dirname($requestScriptName));
+            $scriptName = $this->get('SCRIPT_NAME');
+            $scriptPath = str_replace('\\', '/', dirname($scriptName));
+
             $requestUri = $this->get('REQUEST_URI');
 
-            $this->innerBasePath = '';
+            $this->scriptPath = '';
 
-            if (stripos($requestUri, $requestScriptName) === 0) {
-                $this->innerBasePath = $requestScriptName;
-            } elseif ($requestScriptDir !== '/' && stripos($requestUri, $requestScriptDir) === 0) {
-                $this->innerBasePath = $requestScriptDir;
+            // raw, not rewrited
+            if (stripos($requestUri, $scriptName) === 0) {
+                $this->scriptPath = $scriptName;
+            } elseif ($scriptPath !== '/' && stripos($requestUri, $scriptPath) === 0) { // 多级且rewrited
+                $this->scriptPath = $scriptPath;
             }
         }
 
-        return $this->innerBasePath;
+        return $this->scriptPath . ($this->virtualPath ? '/' . $this->virtualPath : '');
     }
 
     /**
-     * Set proxy base path
+     * Get base url from environment.
      *
-     * @param string $basePath
+     * @return string
+     */
+    public function getBaseUrl(): ?string
+    {
+        return rtrim($this->getScheme() . '://' . $this->getAuthority() . '/' . $this->getBasePath(), '/');
+    }
+
+    /**
+     * Set virtual path
+     *
+     * ex：a proxy prefix path
+     * 
+     * @param string $path
      * @return void
      */
-    public function setProxyBasePath(string $basePath = '')
+    public function setVirtualPath(string $path = '')
     {
-        return $this->proxyBasePath = $basePath;
+        return $this->virtualPath = trim($path, '/\\');
     }
 
     /**
@@ -260,22 +274,23 @@ class EnvironmentImpl extends ArrayObject
      *
      * @return string
      */
-    public function createFullUrl($path, $scheme = true): string
+    public function urlFor($path, $scheme = true): string
     {
         return ($scheme ? $this->getScheme() . '://' : '//') . $this->getAuthority()
-            . ($this->proxyBasePath ? '/' . trim($this->proxyBasePath, '/\\') : '') . '/' . trim($path, '/\\');
+            . ($this->virtualPath ? '/' . $this->virtualPath : '') . '/' . trim($path, '/\\');
     }
 
-    /**
-     * Cut base path
-     *
-     * @return string
-     */
-    public function cutBasePath($path): string
-    {
-        if (strpos($path, $this->getBasePath()) === 0) {
-            return substr($path, 0, strlen($this->getBasePath()));
-        }
-        return $path;
-    }
+    // /**
+    //  * Cut base path
+    //  *
+    //  * @return string
+    //  */
+    // public function cutBasePath($path): string
+    // {
+    //     if (strpos($path, $this->getBasePath()) === 0) {
+    //         return substr($path, 0, strlen($this->getBasePath()));
+    //     }
+
+    //     return $path;
+    // }
 }

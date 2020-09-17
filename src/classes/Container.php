@@ -44,10 +44,6 @@ class Container extends \Sinpe\Container\Container
                     return $container->call($callable);
                 });
 
-                $router->setUriGetter(function ($request) {
-                    return Environment::getDomain() . '/' . trim($request->getUri()->getPath(), '/');
-                });
-
                 return $router;
             };
         }
