@@ -53,11 +53,11 @@ abstract class RequestInspector
     protected $fields = [];
 
     /**
-     * 字段的预设值
+     * 默认有的字段
      *
      * @var array
      */
-    protected $defaultValues = [];
+    protected $defaultFields = [];
 
     /**
      * 表单字段到表字段映射，由子类实际指定
@@ -87,6 +87,18 @@ abstract class RequestInspector
     }
 
     /**
+     * 默认有的字段
+     *
+     * @return static
+     */
+    final public function defaults(array $fields) {
+        // 
+        $this->defaultFields = $fields;
+
+        return $this;
+    }
+
+    /**
      * 设置模式
      *
      * @param Object|string $mode
@@ -103,16 +115,13 @@ abstract class RequestInspector
      * 设置字段
      *
      * @param array $fields 字段
-     * @param array $defaultValues 预设值
      * 
      * @return void
      */
     final public function setFields(
-        array $fields,
-        array $defaultValues = []
+        array $fields
     ) {
         $this->fields = $fields;
-        $this->defaultValues = $defaultValues;
         return $this;
     }
 
@@ -180,7 +189,8 @@ abstract class RequestInspector
 
         if ($mode) {
             $mode->setStrict($this->strict);
-            $mode->setFields($this->fields, $this->defaultValues);
+            $mode->setFields($this->fields);
+            $mode->defaults($this->defaultFields);
             return $mode->handle($request);
         }
 
@@ -253,17 +263,19 @@ abstract class RequestInspector
             }
         }
 
-        // 预设值
-        foreach ($this->defaultValues as $key => $value) {
-            $tableField = $this->tableField2FormField($key, true);
-            if (!isset($handled[$tableField])) {
-                $handled[$tableField] = $value;
-            }
-        }
-
         // 主检查器再次加工结果
         if (method_exists($this, 'handled')) {
             $handled = $this->handled($handled);
+        }
+
+        // 默认字段
+        foreach ($this->defaultFields as $field) {
+            //
+            if (!isset($handled[$field])) {
+                // 
+                $handleMethod = 'handle' . studly($field);
+                $handled[$field] = $this->$handleMethod('');
+            }
         }
 
         return $handled;

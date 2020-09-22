@@ -67,7 +67,7 @@ class Responder
      * @param array $data
      * @return ResponseInterface
      */
-    public function handle($data): ResponseInterface
+    public function handle($data=null): ResponseInterface
     {
         if ($data) {
             if (!is_array($data)) {
