@@ -861,6 +861,15 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
+     * alias
+     *
+     * @return boolean
+     */
+    public function isAjax() {
+        return $this->isXhr();
+    }
+
+    /**
      * Get request content type.
      *
      * Note: This method is not part of the PSR-7 standard.
